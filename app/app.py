@@ -19,38 +19,44 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 
 app.layout = html.Div(
-    [
-        html.H1(children="Speech Sherlock"),
-        dcc.Input(id="input-field", placeholder="speech text", type="text"),
-        html.Div(id="print-text"),
-        html.Div(id="processed-text"),
-        dcc.Graph(
-            id="counting-graph",
-            figure={
-                "data": [
-                    {
-                        "y": [4, 1, 2],
-                        "x": [1, 2, 3],
-                        "type": "bar",
-                        "name": "SF",
-                    },
-                    {
-                        "x": [1, 2, 3],
-                        "y": [2, 4, 5],
-                        "type": "bar",
-                        "name": "Montréal",
-                    },
-                ],
-                "layout": {"title": "Dash Data Visualization"},
-            },
+    children=[
+        html.Div(
+            [
+                html.H1(children="Speech Sherlock"),
+                dcc.Input(id="input", placeholder="speech text", type="text"),
+                html.Div(id="print-text"),
+            ]
+        ),
+        html.Div(
+            id="graph-container",
+            children=[
+                dcc.Graph(id="graph"),
+                dcc.Slider(
+                    id="num-words-slider",
+                    min=5,
+                    max=20,
+                    value=15,
+                    marks={str(val): str(val) for val in range(5, 30, 5)},
+                    step=5,
+                ),
+            ],
         ),
     ]
 )
 
 
+@app.callback(Output("graph-container", "style"), [Input("input", "value")])
+def hide_graph(input):
+    """Only show graph if there is data."""
+    if input:
+        return {"display": "block"}
+    else:
+        return {"display": "none"}
+
+
 @app.callback(
     Output(component_id="print-text", component_property="children"),
-    [Input(component_id="input-field", component_property="value")],
+    [Input(component_id="input", component_property="value")],
 )
 def update_output_div(input_value):
     if not input_value:
@@ -60,16 +66,39 @@ def update_output_div(input_value):
 
 
 @app.callback(
-    Output(component_id="processed-text", component_property="children"),
-    [Input(component_id="input-field", component_property="value")],
+    Output(component_id="graph", component_property="figure"),
+    [
+        Input(component_id="input", component_property="value"),
+        Input("num-words-slider", "value"),
+    ],
 )
-def analyze_text(input_value):
-    tokenized_words = tokenize(input_value)
+def analyze_text(input, num_words):
+    if input is None:
+        return {}
+
+    tokenized_words = tokenize(input)
     # TODO: pass stopwords differently
     preprocessed_words = preprocess_words(tokenized_words, stop_words)
     word_counts = get_word_counts(preprocessed_words, stop_words)
-    print(word_counts)
-    return word_counts
+    word_counts = word_counts[:num_words]
+    word_counts_x = word_counts.values.tolist()
+    word_counts_y = word_counts.index.tolist()
+
+    return {
+        "data": [go.Bar(x=word_counts_x, y=word_counts_y, orientation="h")],
+        "layout": go.Layout(
+            yaxis=dict(
+                autorange="reversed", title="words used", automargin=True
+            ),
+            xaxis=dict(
+                automargin=True,
+                title="number of times used",
+                showgrid=False,
+                showline=True,
+                tickformat=",d",
+            ),
+        ),
+    }
 
 
 if __name__ == "__main__":
