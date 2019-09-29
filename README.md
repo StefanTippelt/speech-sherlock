@@ -1,4 +1,4 @@
-# Speech Shrelock
+# Speech Sherlock \U0001F575
 
 A simple app for natural language processing and counting of most frequent words used.
 
