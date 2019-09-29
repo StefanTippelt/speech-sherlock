@@ -1,4 +1,4 @@
-# Speech Sherlock \U0001F575
+# Speech Sherlock :male_detective:	
 
 A simple app for natural language processing and counting of most frequent words used.
 
