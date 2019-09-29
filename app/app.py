@@ -5,6 +5,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 from nltk.corpus import stopwords
 import nltk
+from nltk.tokenize import word_tokenize
 from text import tokenize, preprocess_words, get_word_counts
 import plotly.graph_objs as go
 
@@ -22,9 +23,9 @@ app.layout = html.Div(
     children=[
         html.Div(
             [
-                html.H1(children="Speech Sherlock"),
+                html.H1(children="Speech Sherlock \U0001F575"),
                 dcc.Input(id="input", placeholder="speech text", type="text"),
-                html.Div(id="print-text"),
+                html.Div([html.P(id="print-stats"), html.P(id="print-text")]),
             ]
         ),
         html.Div(
@@ -60,9 +61,20 @@ def hide_graph(input):
 )
 def update_output_div(input_value):
     if not input_value:
-        return f"Please enter speech"
+        return f"Please enter speech ..."
     else:
-        return f'You\'ve entered "{input_value}"'
+        return f'Here is a preview: "{input_value[:500]} ..."'
+
+
+@app.callback(
+    Output(component_id="print-stats", component_property="children"),
+    [Input(component_id="input", component_property="value")],
+)
+def update_output_stats_div(input_value):
+    if not input_value:
+        return ""
+    else:
+        return f"You've entered a text of {len(word_tokenize(input_value))} words."
 
 
 @app.callback(
@@ -77,7 +89,6 @@ def analyze_text(input, num_words):
         return {}
 
     tokenized_words = tokenize(input)
-    # TODO: pass stopwords differently
     preprocessed_words = preprocess_words(tokenized_words, stop_words)
     word_counts = get_word_counts(preprocessed_words, stop_words)
     word_counts = word_counts[:num_words]
