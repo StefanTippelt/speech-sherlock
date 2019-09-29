@@ -12,7 +12,7 @@ $ make install
 
 ## Run the app
 ```
-$make run
+$ make run
 ```
 
 ## Licence
