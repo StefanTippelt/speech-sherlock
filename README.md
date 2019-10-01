@@ -9,7 +9,7 @@ Some sample data for exloration of the tool can be found in `data/`
 [source for speeches](https://www.fridaysforfuture.org/greta-speeches)
 
 
-![App Overview](/images/overview.jpg)
+![App Overview](overview.jpg)
 
 
 ## Installation
