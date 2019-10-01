@@ -1,38 +1,37 @@
 # -*- coding: utf-8 -*-
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+import dash as _dash
+import dash_core_components as _dcc
+import dash_html_components as _html
 from dash.dependencies import Input, Output
-from nltk.corpus import stopwords
-import nltk
-from nltk.tokenize import word_tokenize
-from text import tokenize, preprocess_words, get_word_counts
-import plotly.graph_objs as go
+from text import TextInvestigate
+import plotly.graph_objs as _go
+import nltk as _nltk
 
-nltk.download("stopwords")
-nltk.download("punkt")
-nltk.download("averaged_perceptron_tagger")
-stop_words = set(stopwords.words("english"))
+_nltk.download("stopwords")
+_nltk.download("punkt")
+# nltk.download("averaged_perceptron_tagger")
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = _dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 
-app.layout = html.Div(
+app.layout = _html.Div(
     children=[
-        html.Div(
+        _html.Div(
             [
-                html.H1(children="Speech Sherlock \U0001F575"),
-                dcc.Input(id="input", placeholder="speech text", type="text"),
-                html.Div([html.P(id="print-stats"), html.P(id="print-text")]),
+                _html.H1(children="Speech Sherlock \U0001F575"),
+                _dcc.Input(id="input", placeholder="speech text", type="text"),
+                _html.Div(
+                    [_html.P(id="print-stats"), _html.P(id="print-text")]
+                ),
             ]
         ),
-        html.Div(
+        _html.Div(
             id="graph-container",
             children=[
-                dcc.Graph(id="graph"),
-                dcc.Slider(
+                _dcc.Graph(id="graph"),
+                _dcc.Slider(
                     id="num-words-slider",
                     min=5,
                     max=20,
@@ -70,11 +69,14 @@ def update_output_div(input_value):
     Output(component_id="print-stats", component_property="children"),
     [Input(component_id="input", component_property="value")],
 )
-def update_output_stats_div(input_value):
-    if not input_value:
+def update_output_stats_div(input):
+    if not input:
         return ""
     else:
-        return f"You've entered a text of {len(word_tokenize(input_value))} words."
+        return (
+            f"You've entered a text of ",
+            f"{TextInvestigate(input).get_raw_word_count()} words.",
+        )
 
 
 @app.callback(
@@ -88,16 +90,14 @@ def analyze_text(input, num_words):
     if input is None:
         return {}
 
-    tokenized_words = tokenize(input)
-    preprocessed_words = preprocess_words(tokenized_words, stop_words)
-    word_counts = get_word_counts(preprocessed_words, stop_words)
+    word_counts = TextInvestigate(input).get_cleaned_word_counts()
     word_counts = word_counts[:num_words]
     word_counts_x = word_counts.values.tolist()
     word_counts_y = word_counts.index.tolist()
 
     return {
-        "data": [go.Bar(x=word_counts_x, y=word_counts_y, orientation="h")],
-        "layout": go.Layout(
+        "data": [_go.Bar(x=word_counts_x, y=word_counts_y, orientation="h")],
+        "layout": _go.Layout(
             yaxis=dict(
                 autorange="reversed", title="words used", automargin=True
             ),
@@ -113,5 +113,5 @@ def analyze_text(input, num_words):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=False)
 
