@@ -8,6 +8,10 @@ Next steps will include sentiment analysis of the text to classify the main emot
 Some sample data for exloration of the tool can be found in `data/`
 [source for speeches](https://www.fridaysforfuture.org/greta-speeches)
 
+
+![App Overview](/images/overview.jpg)
+
+
 ## Installation
 ```
 $ make install
