@@ -6,6 +6,7 @@ from dash.dependencies import Input, Output
 from text import TextInvestigate
 import plotly.graph_objs as _go
 import nltk as _nltk
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 _nltk.download("stopwords")
 _nltk.download("punkt")
@@ -41,6 +42,7 @@ app.layout = _html.Div(
                 ),
             ],
         ),
+        _dcc.Markdown(id="sentiment", style={"padding": 30, "fontSize": 30}),
     ]
 )
 
@@ -112,6 +114,31 @@ def analyze_text(input, num_words):
     }
 
 
+@app.callback(
+    Output(component_id="sentiment", component_property="children"),
+    [Input(component_id="input", component_property="value")],
+)
+def analyze_sentiment(input):
+    if not input:
+        return ""
+    else:
+        analyser = SentimentIntensityAnalyzer()
+        score = analyser.polarity_scores(input)
+
+        max_score = sorted(
+            score.items(), key=lambda item: item[1], reverse=True
+        )[0]
+        # return "The main sentiment of the text is: " + str(max_score[0])
+        emoji_map = {
+            "neg": "\U0001F641",
+            "neu": "\U0001F610",
+            "pos": "\U0001F603",
+            "compound": "\U0001F937",
+        }
+
+        return "The main sentiment of the text is: " + emoji_map[max_score[0]]
+
+
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True)
 

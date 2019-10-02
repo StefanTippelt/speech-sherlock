@@ -40,3 +40,4 @@ class TextInvestigate:
             FreqDist(self.cleaned_words)
         ).sort_values(ascending=False)
         return self.cleaned_word_counts
+
