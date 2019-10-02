@@ -3,21 +3,29 @@
 A simple app for natural language processing and counting of most frequent words used.
 The tool is meant for quick exploration of the main concept of puplic speeches.
 
-Next steps will include sentiment analysis of the text to classify the main emotions delivered in the speech.
+Insert any text in the input field and get a chart with most frequent words used. Use the slider for showing the amount of words you are interested in.
+
+![App Overview](images/overview.jpg)
+
+Additionally there is a sentiment analysis performed based on [NLTK VADER](https://www.nltk.org/_modules/nltk/sentiment/vader.html) sentiment analysis. The output is mapped to emojis and show the most important sentiment of the text.
+
+![App Overview](images/sentiment.jpg)
+
 
 Some sample data for exloration of the tool can be found in `data/`
+
 [source for speeches](https://www.fridaysforfuture.org/greta-speeches)
 
 
-![App Overview](overview.jpg)
-
 
 ## Installation
+For installation of the project please run
 ```
-$ make install
+$ make deps
 ```
 
 ## Run the app
+To start the app, run
 ```
 $ make run
 ```
