@@ -128,7 +128,7 @@ def analyze_sentiment(input):
         max_score = sorted(
             score.items(), key=lambda item: item[1], reverse=True
         )[0]
-        # return "The main sentiment of the text is: " + str(max_score[0])
+
         emoji_map = {
             "neg": "\U0001F641",
             "neu": "\U0001F610",
