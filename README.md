@@ -1,8 +1,10 @@
 # Speech Sherlock :male_detective:	
 
-A simple app for natural language processing and counting of most frequent words used.
+A simple web app for natural language processing and counting of most frequent words used.
 The tool is meant for quick exploration of texts like puplic speeches.
+The app is based on [Dash](https://github.com/plotly/dash) and is using natural language toolkit [nltk](https://github.com/nltk/nltk).
 
+## How it works
 Insert any text in the input field and get a chart with most frequent words used. Use the slider for showing the amount of words you are interested in.
 
 ![App Overview](images/overview.jpg)
