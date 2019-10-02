@@ -1,7 +1,7 @@
 # Speech Sherlock :male_detective:	
 
 A simple app for natural language processing and counting of most frequent words used.
-The tool is meant for quick exploration of the main concept of puplic speeches.
+The tool is meant for quick exploration of texts like puplic speeches.
 
 Insert any text in the input field and get a chart with most frequent words used. Use the slider for showing the amount of words you are interested in.
 
