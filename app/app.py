@@ -10,7 +10,6 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 _nltk.download("stopwords")
 _nltk.download("punkt")
-# nltk.download("averaged_perceptron_tagger")
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
